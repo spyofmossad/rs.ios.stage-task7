@@ -8,6 +8,10 @@
 #import "LoginViewController.h"
 #import "HighlightedButton.h"
 
+static NSString *const Username = @"username";
+static NSString *const Password = @"password";
+static NSString *const SecureCode = @"132";
+
 @interface LoginViewController ()
 
 @property (strong, nonatomic) UITextField *login;
@@ -18,15 +22,12 @@
 
 @property NSMutableArray *secureCodeBuffer;
 @property NSMutableArray<HighlightedButton *> *secureButtons;
-//@property BOOL isLoginValid;
-//@property BOOL isPasswordValid;
+@property BOOL isLoginValid;
+@property BOOL isPasswordValid;
 
 @end
 
 @implementation LoginViewController
-
-BOOL isLoginValid = false;
-BOOL isPasswordValid = false;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -41,9 +42,9 @@ BOOL isPasswordValid = false;
 }
 
 - (void)authOnTap {
-    isLoginValid = [self validateInput: self.login valueEquals:USERNAME];
-    isPasswordValid = [self validateInput: self.password valueEquals:PASSWORD];
-    if (isLoginValid && isPasswordValid) {
+    self.isLoginValid = [self validateInput: self.login valueEquals:Username];
+    self.isPasswordValid = [self validateInput: self.password valueEquals:Password];
+    if (self.isLoginValid && self.isPasswordValid) {
         [self disableInputs];
         [self containerView].hidden = false;
     }
@@ -94,7 +95,7 @@ BOOL isPasswordValid = false;
 - (void)validateCode {
     if (self.secureCodeBuffer.count == 3) {
         NSString *enteredCode = [[self.secureCodeBuffer valueForKey:@"description"] componentsJoinedByString:@""];
-        if ([enteredCode isEqual:SECURE_CODE]) {
+        if ([enteredCode isEqual:SecureCode]) {
             self.containerView.layer.borderColor = [UIColor colorNamed:@"TurqGreen"].CGColor;
             self.containerView.layer.borderWidth = 2;
             [self showAlert];
@@ -297,9 +298,9 @@ BOOL isPasswordValid = false;
     textField.layer.borderColor = [UIColor colorNamed: @"BlackCoral"].CGColor;
     return YES;
 }
-r
+
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    if (isLoginValid && isPasswordValid) {
+    if (self.isLoginValid && self.isPasswordValid) {
         [textField resignFirstResponder];
     }
     return YES;
